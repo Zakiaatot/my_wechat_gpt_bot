@@ -1,0 +1,20 @@
+{
+  "name": "my_wechat_gpt_bot",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node ./main.js",
+    "dev": "node ./main.js"
+  },
+  "keywords": [],
+  "author": "zakiaatot",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "markdown-to-txt": "^2.0.1",
+    "openai": "^3.1.0",
+    "wechaty": "^1.20.2"
+  }
+}
