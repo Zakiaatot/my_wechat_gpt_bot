@@ -1,5 +1,5 @@
 # my_wechat_gpt_bot
-### 最近很火的openai,自己看了看官方api,用wechaty写了个微信机器人自用，仅供娱乐
+### 最近很火的openai,自己看了看官方的gpt3-api,用wechaty写了个微信机器人自用，仅供娱乐,没chatgpt那么智能，但基本能用，期待非官方api的逆向突破!
 
 ### Usage：
 1.克隆项目
