@@ -9,7 +9,7 @@ const message_handler = async (message) => {
         const topic = await room.topic()
         if (config.WHITE_LIST.includes(topic)) {
             const alias = (await message.talker().alias()) || (await message.talker().name())
-            const text = message.text().replace(config.BOT_NAME + " ", "")
+            const text = message.text().replace(config.BOT_NAME, "")
             const res = await reply(text)
             room.say("@" + alias + " \n" + res)
         }

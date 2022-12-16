@@ -20,5 +20,5 @@ cd my_wechat_gpt_bot
 npm i
 npm start
 
-点击连接扫码登录微信，开始enjoy！
+点击链接扫码登录微信，开始enjoy！
 ```
