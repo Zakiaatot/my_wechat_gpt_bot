@@ -13,7 +13,11 @@ const message_handler = async (message) => {
         if (config.WHITE_LIST.includes(topic) && message.type() === wechaty.Message.Type.Text) {
             const alias = (await message.talker().alias()) || (await message.talker().name())
             const text = message.text().replace(config.BOT_NAME, "")
-            const res = await reply(text)
+            try {
+                const res = await reply(text)
+            } catch (errr) {
+                const res = "出错了稍后再试哦！"
+            }
             room.say("@" + alias + " \n" + res)
         }
     }
