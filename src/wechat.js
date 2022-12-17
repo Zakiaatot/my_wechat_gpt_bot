@@ -15,10 +15,12 @@ const message_handler = async (message) => {
             const text = message.text().replace(config.BOT_NAME, "")
             try {
                 const res = await reply(text)
+                room.say("@" + alias + " \n" + res)
             } catch (errr) {
                 const res = "出错了稍后再试哦！"
+                room.say("@" + alias + " \n" + res)
             }
-            room.say("@" + alias + " \n" + res)
+
         }
     }
 
