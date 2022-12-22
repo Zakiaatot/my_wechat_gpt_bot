@@ -5,7 +5,7 @@ import config from '../config.js'
 import { reply } from './openai.js'
 
 //存登录信息目录
-const tmp_path = "./tmp/last_login.json"
+const tmp_path = "./last_login.json"
 
 let bot
 //从之前保存的数据登录
