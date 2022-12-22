@@ -33,10 +33,10 @@ if (bot.PROP.uin) {
 
 //扫码登录
 bot.on('uuid', uuid => {
+    console.log('二维码登录链接：', 'https://login.weixin.qq.com/qrcode/' + uuid)
     qrcodeTerminal.generate('https://login.weixin.qq.com/l/' + uuid, {
         small: true
     })
-    console.log('二维码登录链接：', 'https://login.weixin.qq.com/qrcode/' + uuid)
 })
 
 //登录成功事件
