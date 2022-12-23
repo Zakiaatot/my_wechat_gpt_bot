@@ -4,7 +4,7 @@ import config from '../config.js'
 //请求实例
 const req_instance = axios.create({
     baseURL: 'https://api.openai.com',
-    timeout: 10 * 1000,
+    timeout: 30 * 1000,
     headers: {
         'Accept-Encoding': 'gzip, deflate, compress'
     }
@@ -20,7 +20,7 @@ req_instance.interceptors.request.use((cfg) => {
 const req = async (prompt) => await req_instance.post('v1/engines/text-davinci-003/completions', {
     prompt: prompt,
     temperature: 0.9,
-    max_tokens: 240,
+    max_tokens: 2048,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0.6,
