@@ -20,7 +20,7 @@ req_instance.interceptors.request.use((cfg) => {
 const req = async (prompt) => await req_instance.post('v1/engines/text-davinci-003/completions', {
     prompt: prompt,
     temperature: 0.9,
-    max_tokens: 4096,
+    max_tokens: 3000,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0.6,
@@ -78,7 +78,7 @@ class Conversation {
     }
 
     check() {
-        if (this.prompt.length > 4096) this.prompt = this.prompt.slice(2048)
+        if (this.prompt.length > 3000) this.prompt = this.prompt.slice(1000)
     }
 }
 
