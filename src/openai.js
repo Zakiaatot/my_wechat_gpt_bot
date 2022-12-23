@@ -20,7 +20,7 @@ req_instance.interceptors.request.use((cfg) => {
 const req = async (prompt) => await req_instance.post('v1/engines/text-davinci-003/completions', {
     prompt: prompt,
     temperature: 0.9,
-    max_tokens: 3000,
+    max_tokens: 4000,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0.6,
@@ -50,6 +50,7 @@ class Conversation {
 
     async ask(questions) {
         this.is_asking = true
+        this.check()
         let reply = ''
         try {
             let tmp_prompt = this.prompt + 'Human: ' + questions + '\n'
