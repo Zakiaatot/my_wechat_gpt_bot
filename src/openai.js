@@ -1,42 +1,114 @@
-import { markdownToTxt } from 'markdown-to-txt'
-import { Configuration, OpenAIApi } from "openai"
+import axios from 'axios'
 import config from '../config.js'
 
-const configuration = new Configuration({
-    apiKey: config.OPENAI_API_KEY,
+//请求实例
+const req_instance = axios.create({
+    baseURL: 'https://api.openai.com',
+    timeout: 10 * 1000,
+    headers: {
+        'Accept-Encoding': 'gzip, deflate, compress'
+    }
 })
-const openai = new OpenAIApi(configuration)
+
+req_instance.interceptors.request.use((cfg) => {
+    cfg.headers.Authorization = `Bearer ${config.OPENAI_API_KEY}`
+    cfg.headers['content-type'] = 'application/json;charset=UTF-8'
+    return cfg
+})
+
+//请求函数
+const req = async (prompt) => await req_instance.post('v1/engines/text-davinci-003/completions', {
+    prompt: prompt,
+    temperature: 0.9,
+    max_tokens: 240,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0.6,
+    best_of: 1,
+    logprobs: 0,
+    stop: [
+        ' Human:',
+        ' AI:'
+    ]
+})
 
 
-const reply = async (prompt) => {
-    console.log('👀 👀 👀 / prompt: ', prompt)
-    try {
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt,
-            temperature: 0.9,
-            max_tokens: 4000,
-            frequency_penalty: 0.0,
-            presence_penalty: 0.6,
-            stop: [' Human:', ' AI:'],
-        })
-        const reply = markdownToTxt(response.data.choices[0].text)
-        console.log('✅ ✅ ✅ / reply: ', reply)
-        return reply
-    } catch (error) {
-        console.log('❌ ❌ ❌ / error: ')
-        if (error.response) {
-            console.log(error.response.status)
-            return error.response.status
-        } else {
-            console.log(error.message)
-            return error.message
+const template
+    = 'The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\n'
+    + 'Human: Hello, who are you?\n'
+    + 'AI: I am an AI created by OpenAI. How can I help you today?\n'
+
+//构建一个对话类
+class Conversation {
+    id = NaN
+    is_asking = false//锁
+    prompt = template
+
+    constructor(id) {
+        this.id = id
+    }
+
+    async ask(questions) {
+        this.is_asking = true
+        let reply = ''
+        try {
+            let tmp_prompt = this.prompt + 'Human: ' + questions + '\n'
+            while (1) {
+                const { data } = await req(tmp_prompt + 'AI: ' + reply)
+                const [choice] = data.choices
+                reply += choice.text
+                if (choice.finish_reason === 'stop') break;
+            }
+            this.prompt = tmp_prompt
+            this.prompt += 'AI: ' + reply + '\n'
+        } catch (e) {
+            reply = '错误,稍后再试：'
+            if (e.message) {
+                reply += e.message
+                console.log(e.message)
+            }
+            else {
+                reply += '未知错误！'
+                console.log(e)
+            }
         }
+        this.is_asking = false
+        this.check()
+        return reply
+    }
+
+    check() {
+        if (this.prompt.length > 10000) this.prompt = this.prompt.slice(5000)
     }
 }
 
+//对话池
+const conversation_map = new Map()
 
 
-export {
-    reply
+export const reply = async (id, questions) => {
+    console.log("ID: ", id, "\tQ:", questions)
+    const is_exist_conversation = conversation_map.has(id)
+    if (is_exist_conversation && await conversation_map.get(id).is_asking) {
+        return '你的上一个问题我正在思考，稍等！'
+    }
+
+    if (questions === config.RESET) {//reset
+        if (!is_exist_conversation) return '未开始对话无需重置!'
+        conversation_map.delete(id)
+        return '对话已重置！'
+    } else if (questions === config.HISTORY) {//history
+        if (!is_exist_conversation) return '无历史记录！'
+        return await conversation_map.get(id).prompt
+    }
+
+
+    if (!is_exist_conversation) {
+        conversation_map.set(id, new Conversation(id))
+    }
+
+    const conversation = await conversation_map.get(id)
+    return conversation.ask(questions)
 }
+
+

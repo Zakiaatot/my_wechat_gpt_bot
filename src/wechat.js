@@ -84,7 +84,7 @@ bot.on('message', async msg => {
                     }
                 }
 
-                const res = await reply(txt)
+                const res = await reply(from_id, txt)
                 bot.sendMsg("@" + at_name + ":\n" + res, msg.FromUserName).catch(err => {
                     bot.emit('error', err)
                 })
@@ -92,7 +92,7 @@ bot.on('message', async msg => {
 
             }
         } else {    //个人消息
-            const res = await reply(msg.Content)
+            const res = await reply(msg.FromUserName, msg.Content)
             bot.sendMsg(res, msg.FromUserName).catch(err => {
                 bot.emit('error', err)
             })

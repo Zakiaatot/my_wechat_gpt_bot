@@ -1,6 +1,6 @@
 {
   "name": "my_wechat_gpt_bot",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "",
   "type": "module",
   "scripts": {
@@ -11,9 +11,7 @@
   "author": "zakiaatot",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.17.21",
-    "markdown-to-txt": "^2.0.1",
-    "openai": "^3.1.0",
+    "axios": "^1.2.1",
     "qrcode-terminal": "^0.12.0",
     "wechat4u": "^0.7.9"
   }
