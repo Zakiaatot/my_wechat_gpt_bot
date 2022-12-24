@@ -16,16 +16,18 @@ req_instance.interceptors.request.use((cfg) => {
     return cfg
 })
 
+const MAX = 3000
+const MAXTOKEN = 500
+
 //请求函数
 const req = async (prompt) => await req_instance.post('v1/engines/text-davinci-003/completions', {
     prompt: prompt,
     temperature: 0.9,
-    max_tokens: 2048,
+    max_tokens: MAXTOKEN,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0.6,
     best_of: 1,
-    logprobs: 0,
     stop: [
         ' Human:',
         ' AI:'
@@ -55,7 +57,9 @@ class Conversation {
         try {
             let tmp_prompt = this.prompt + 'Human: ' + questions + '\n'
             while (1) {
-                const { data } = await req(tmp_prompt + 'AI: ' + reply)
+                let now_prompt = tmp_prompt + 'AI: ' + reply
+                if (now_prompt.length >= MAX - MAXTOKEN) now_prompt = now_prompt.slice(now_prompt.length - (MAX - MAXTOKEN))
+                const { data } = await req(now_prompt)
                 const [choice] = data.choices
                 reply += choice.text
                 if (choice.finish_reason === 'stop') break;
@@ -64,7 +68,10 @@ class Conversation {
             this.prompt += 'AI: ' + reply + '\n'
         } catch (e) {
             reply = '错误,稍后再试：'
-            if (e.message) {
+            if (e.response && e.response.data && e.response.data.error) {
+                reply += e.response.data.error.message
+                console.log(e.response.data.error.message)
+            } else if (e.message) {
                 reply += e.message
                 console.log(e.message)
             }
@@ -79,7 +86,7 @@ class Conversation {
     }
 
     check() {
-        if (this.prompt.length > 2048) this.prompt = this.prompt.slice(1024)
+        if (this.prompt.length >= MAX - MAXTOKEN) this.prompt = this.prompt.slice(this.prompt.length - (MAX - MAXTOKEN))
     }
 }
 

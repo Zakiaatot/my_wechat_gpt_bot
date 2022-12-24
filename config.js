@@ -1,5 +1,5 @@
 export default {
-    OPENAI_API_KEY: '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',  //openai的apikey
+    OPENAI_API_KEY: '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',  //openai的apikey
     BOT_NAME: '@小G',  //机器人昵称
     RESET: 'RESET', //重置对话口令
     HISTORY: 'HISTORY', //查看历史对话命令
