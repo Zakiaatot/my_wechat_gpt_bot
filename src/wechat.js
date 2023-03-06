@@ -33,10 +33,10 @@ if (bot.PROP.uin) {
 
 //扫码登录
 bot.on('uuid', uuid => {
-    console.log('二维码登录链接：', 'https://login.weixin.qq.com/qrcode/' + uuid)
     qrcodeTerminal.generate('https://login.weixin.qq.com/l/' + uuid, {
         small: true
     })
+    console.log('二维码登录链接：', 'https://login.weixin.qq.com/qrcode/' + uuid)
 })
 
 //登录成功事件
@@ -92,10 +92,12 @@ bot.on('message', async msg => {
 
             }
         } else {    //个人消息
-            const res = await reply(msg.FromUserName, msg.Content)
-            bot.sendMsg(res, msg.FromUserName).catch(err => {
-                bot.emit('error', err)
-            })
+            if (config.IS_OPEN_FOR_USER) {
+                const res = await reply(msg.FromUserName, msg.Content)
+                bot.sendMsg(res, msg.FromUserName).catch(err => {
+                    bot.emit('error', err)
+                })
+            }
         }
 
     }
