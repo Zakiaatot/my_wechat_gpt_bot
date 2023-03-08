@@ -1,8 +1,11 @@
 # my_wechat_gpt_bot
 ### 最近很火的openai,自己看了看官方的gpt3-api,用wechaty写了个微信机器人自用，仅供娱乐,没chatgpt那么智能，但基本能用，期待非官方api的逆向突破!(2023.3.6 已经有成熟的第三方api模块了！)
 
+![截图](./screenshot/screenshot.png)
 ### 2023.3.6
 更换gpt3.5模型，启用chatgpt-api方便维护,目前有想法复刻一个gpt的网站，流式传输，不止对话，还有绘画
+
+
 
 ### 2022.12.24
 支持上下语境,无限接近CHATGPT
