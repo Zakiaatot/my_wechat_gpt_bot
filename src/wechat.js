@@ -83,6 +83,7 @@ bot.on('message', async msg => {
                         at_name = member_info[i].DisplayName || member_info[i].NickName
                     }
                 }
+                if (at_name === undefined) at_name = from_id
 
                 const res = await reply(from_id, txt)
                 bot.sendMsg("@" + at_name + ":\n" + res, msg.FromUserName).catch(err => {
